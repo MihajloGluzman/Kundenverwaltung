@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" th:href="@{/style.css}">
+		<title>Kundenverwaltung</title>
+	</head>
+	<body>
+		<a th:href="@{/}">Zurück zur Kundenverwaltung</a>
+		<h2>Fehlermeldungen</h2>
+		<div class="contentIndex" id="errors">
+			<p th:if="${errorMessage}"  th:text="${errorMessage}">Error</p>
+		</div>
+
+	</body>
+</html>

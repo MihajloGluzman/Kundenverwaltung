@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="Mischa Gluzman">
+   		<link rel="stylesheet" th:href="@{/style.css}">
+
+        <title>Kundenverwaltung</title>
+    </head>
+    <body>
+    <a th:href="@{/}">Zurück zur Kundenverwaltung</a>
+    	  <h2>Daten bearbeiten</h2>
+    	
+        <div class="content">
+          
+            <form th:object="${customer}" method="post">
+  				 <label for="lastName">Familienname:</label><br>
+  				 <input type="text" th:value="${customer.lastName}" th:field="*{lastName}"><br><br>
+  				 <label for="firstName">Vorname</label><br>
+  				 <input type="text" th:value="${customer.firstName}" th:field="*{firstName}"><br><br>
+  				 <label for="dateOfBirth">Geburtsdatum</label><br>
+  				 <input type="date" th:value="${customer.dateOfBirth}" th:field="*{dateOfBirth}"><br><br>
+  				 <label for="sex">Geschlecht</label><br>
+  				 <input type="text" th:value="${customer.sex}" th:field="*{sex}"><br><br>
+  				 <label for="email">E-Mail</label><br>
+  				 <input type="text" th:value="${customer.email}" th:field="*{email}"><br><br>
+ 				 <input type="submit" value="Submit" id="button">
+		    </form> 
+        </div>
+    </body>
+</html>

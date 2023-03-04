@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="Mischa Gluzman">
+   		<link rel="stylesheet" th:href="@{/style.css}">
+
+        <title>Kundenverwaltung</title>
+    </head>
+    <body>
+  	  <a th:href="@{/}" >Zurück zur Kundenverwaltung</a>
+    	<h2>Persönliche Informationen</h2>
+    	
+    	
+        <div class="contentIndex">
+
+            <table>
+                <tr>
+	                <th>ID</th>
+	                <th>Name</th>
+	                <th>Vorname</th>
+	                <th>Geburtsdatum</th>
+	                <th>Geschlecht</th>
+	                <th>E-Mail</th>
+                </tr>
+                
+                <tr>
+                	<td th:text="${customer.id}" ></td>
+               	 	<td th:text="${customer.lastName}" ></td>
+               		<td th:text="${customer.firstName}" ></td>
+                	<td th:text="${customer.dateOfBirth}"></td>
+                	<td th:text="${customer.sex}"></td>
+                	<td th:text="${customer.email}"></td>
+                	<td><a th:href="@{/editCustomer/{id}(id=${customer.id})}" id="editBtn">Bearbeiten</a></td>
+                	<td><a th:href="@{/deleteCustomer/{id}(id=${customer.id})}" id="deleteBtn" >Löschen</a></td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

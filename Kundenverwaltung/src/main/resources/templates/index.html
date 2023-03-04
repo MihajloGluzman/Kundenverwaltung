@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="Mischa Gluzman">
+   		<link rel="stylesheet" th:href="@{/style.css}">
+
+        <title>Kundenverwaltung</title>
+    </head>
+    <body>
+   		<h2>Willkommen in der Kundenverwaltung</h2>
+			
+        <div class="contentIndex">
+			
+            <a th:href="@{/newCustomer}" id="add" >Neuen Kunden anlegen</a>
+        
+            <table>
+               	<tr>
+                	<th>ID</th>
+                	<th>Name</th>
+                	<th>Vorname</th>
+                	<th>Geburtsdatum</th>
+                </tr>
+                
+                <tr th:each="customer: ${customerlist}">
+                	<td th:text="${customer.id}"></td>
+               	 	<td th:text="${customer.lastName}"></td>
+               		<td th:text="${customer.firstName}" ></td>
+                	<td th:text="${customer.dateOfBirth}"></td>
+                	<td> <a th:href="@{/customerInformation/{id}(id=${customer.id})}">Info</a></td>
+                </tr>
+                	
+            </table><br>
+        
+             <table>
+                <tr>
+                	<th>ID</th>
+                	<th>Name</th>
+                	<th>Vorname</th>
+                	<th>Geburtsdatum</th>
+                </tr>
+                <h4> Weibliche Kunden</h4>
+                <tr th:each="customer: ${customerlistFemale}">
+                	<td th:text="${customer.id}" ></td>
+               	 	<td th:text="${customer.lastName}"></td>
+               		<td th:text="${customer.firstName}" ></td>
+                	<td th:text="${customer.dateOfBirth}"></td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
