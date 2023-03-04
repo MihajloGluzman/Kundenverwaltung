@@ -24,9 +24,9 @@ Bei ungültigen Benutzereingaben wird /error mit den jeweiligen Fehlermeldungen 
 
 Folgende Technologien habe ich in diesem Projekt verwendet:
 
--Spring Boot
--Thymeleaf
--HTML, CSS
--Squirrel zum Erstellen der Datenbank
--Postgresql als Datenbank
--Postman zum Testen der POST-Controller
+- Spring Boot
+- Thymeleaf
+- HTML, CSS
+- Squirrel zum Erstellen der Datenbank
+- Postgresql als Datenbank
+- Postman zum Testen der POST-Controller
