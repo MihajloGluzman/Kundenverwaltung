@@ -3,7 +3,7 @@
 Hierbei handelt es sich um eine Webanwendung zur Kundenverwaltung.
 Diese verwaltet personenbezogene Daten eines Kunden in einer SQL-Datenbank. 
 
-#### Die Webansicht stellt fünf Funktionen zur Verfügung:
+### Die Webansicht stellt fünf Funktionen zur Verfügung:
 
 **1. Alle Kunden anzeigen:**
 Auf der Startseite werden alle Kunden tabellarisch dargegestellt.
