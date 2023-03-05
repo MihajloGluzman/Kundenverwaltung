@@ -27,6 +27,6 @@ Bei ungültigen Benutzereingaben wird /error mit den jeweiligen Fehlermeldungen 
 - Spring Boot
 - Thymeleaf
 - HTML, CSS
-- Squirrel zum Erstellen der Datenbank
+- Squirrel als SQL Client
 - Postgresql als Datenbank
-- Postman zum Testen der POST-Controller
+- Postman zum Testen der APIs
