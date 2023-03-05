@@ -1,4 +1,4 @@
-# Spring-Boot-CRUD
+# Einfache Kundenverwaltung
 
 Hierbei handelt es sich um eine Webanwendung zur Kundenverwaltung.
 Diese verwaltet personenbezogene Daten eines Kunden in einer SQL-Datenbank. 
