@@ -13,7 +13,7 @@
     	
     	
         <div class="contentIndex">
-
+			<h3>Kerndaten</h3>
             <table>
                 <tr>
 	                <th>ID</th>
@@ -33,8 +33,32 @@
                 	<td th:text="${customer.email}"></td>
                 	<td><a th:href="@{/editCustomer/{id}(id=${customer.id})}" id="editBtn">Bearbeiten</a></td>
                 	<td><a th:href="@{/deleteCustomer/{id}(id=${customer.id})}" id="deleteBtn" >Löschen</a></td>
+            </table>
+            
+            <h3>Addressen</h3>
+              <td><a th:href="@{/addAddress/{id}(id=${customer.id})}" id="addressBtn" >Adresse hinzufügen</a></td>
+            <table>
+                <tr>
+	                <th>Addressnummer</th>
+	                <th>Straße</th>
+	                <th>Hausnummer</th>
+	                <th>Postleitzahl</th>
+	                <th>Stadt</th>
+	                <th>Land</th>
+                </tr>
+                
+                 	<tr th:each="address: ${addressList}">
+                	<td th:text="${addressStat.index+1}"></td>
+               	 	<td th:text="${address.street}"></td>
+               		<td th:text="${address.houseNumber}" ></td>
+                	<td th:text="${address.postalCode}"></td>
+                	<td th:text="${address.city}"></td>
+                	<td th:text="${address.country}"></td>
+                	<td><a th:href="@{/editAddress/{addressId}/{id}(addressId=${address.addressId}, id=${customer.id})}" id="editBtn">Bearbeiten</a></td>
+                	<td><a th:href="@{/deleteAddress/{addressId}/{id}(addressId=${address.addressId}, id=${customer.id})}" id="deleteBtn" >Löschen</a></td>
                 </tr>
             </table>
+            <br>
         </div>
     </body>
 </html>

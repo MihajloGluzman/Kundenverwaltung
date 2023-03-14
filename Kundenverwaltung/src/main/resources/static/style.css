@@ -50,6 +50,11 @@ h2 {
     font-size: 38px;
 }
 
+h3 {
+	text-align: center;
+	font-size: 25px;
+}
+
 .contentIndex h4 {
 	text-align: center;
 }
@@ -62,8 +67,9 @@ table {
 
 td {
     text-align: center;
-   	padding: 2px;
+   	padding: 4px;
 }
+
 
 #add{
 	padding: 3px 8px;
@@ -82,7 +88,7 @@ td {
 	font-weight: bold;
 }
 
-#editBtn, #deleteBtn {
+#editBtn, #deleteBtn, #addressBtn {
 	padding: 3px 8px;
 	width: 100%;
 	color: white;
@@ -99,6 +105,13 @@ td {
 #deleteBtn {
 	background-color: #D22B2B;
 	
+}
+
+#addressBtn{
+	background-color: #3CBC8D;
+	float: right;
+	width: 17%;
+	margin-bottom: 5px;
 }
 
 #errors {

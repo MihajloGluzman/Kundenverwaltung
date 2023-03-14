@@ -1,7 +1,8 @@
 package de.mischagluzman.kundenverwaltung.controller;
 
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List; 
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import de.mischagluzman.kundenverwaltung.model.Address;
 import de.mischagluzman.kundenverwaltung.model.Customer;
 import de.mischagluzman.kundenverwaltung.model.Sex;
+import de.mischagluzman.kundenverwaltung.repository.AddressRepository;
 import de.mischagluzman.kundenverwaltung.repository.CustomerRepository;
+import de.mischagluzman.kundenverwaltung.service.AddressService;
 
 @Controller
 public class CustomerController {
 	
 	@Autowired
 	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private AddressRepository addressRepository;
+	
+	@Autowired
+	private AddressService addressService;
+	
 	
 	// shows all customers saved in database
 	@GetMapping("/")
@@ -69,11 +80,17 @@ public class CustomerController {
 		
 	}
 
-	// shows additional customers information (email, sex)
+	// shows additional customers information (email, sex, addresses)
 	@GetMapping("/customerInformation/{id}")
-	public String showCustomerInformation(Model model, @PathVariable("id") int id, @ModelAttribute Customer customer) {
+	public String showCustomerInformation(Model model, @PathVariable("id") int id, @ModelAttribute Customer customer, @ModelAttribute Address address) {
 	
-		model.addAttribute("customer", customerRepository.findById(customer.getId()).orElse(null));
+		if(customerRepository.findById(customer.getId()).isPresent()) {
+			model.addAttribute("customer", customerRepository.findById(customer.getId()).get());
+		}
+		
+		List<Address> addressList = addressService.getAllCustomersAddresses(id);
+		model.addAttribute("addressList", addressList);
+	
 		return "customerInformation";
 	}
 	
@@ -81,13 +98,17 @@ public class CustomerController {
 	@GetMapping("/editCustomer/{id}")
 	public String showEditCustomerForm(@ModelAttribute Customer customer, Model model, @PathVariable("id") int id){
 		
-		model.addAttribute("customer", customerRepository.findById(customer.getId()).orElse(null));
+		if(customerRepository.findById(customer.getId()).isPresent()) {
+			model.addAttribute("customer", customerRepository.findById(customer.getId()).get());
+		}
+		
 		return "editCustomer";
 	}
 	
+	
 	// updates the edited information and shows the edited customer
 	@PostMapping("/editCustomer/{id}")
-	public String updateCustomer(@Valid @ModelAttribute Customer customer, BindingResult result, Model model, @PathVariable("id") int id) {
+	public String updateCustomer(@Valid @ModelAttribute Customer customer, BindingResult result, Model model, @PathVariable("id") int id, @ModelAttribute Address address) {
 		
 		// shows error page with error messages if user input is invalid
 		if(result.hasErrors()) {
@@ -95,17 +116,70 @@ public class CustomerController {
 			return "error";
 		}
 		customerRepository.save(customer);
-		return showCustomerInformation(model, id, customer);
+		return showCustomerInformation(model, id, customer, address);
 	}
 	
 	// deletes a customer from database and shows all Customers
+	// deletes also all customers addresses 
 	@GetMapping("/deleteCustomer/{id}")
 	public String deleteCustomer(Model model,@ModelAttribute Customer customer) {
 		
 		customerRepository.delete(customer);
+		
+		if(!addressService.getAllCustomersAddresses(customer.getId()).isEmpty()) {
+			addressRepository.deleteAll(addressService.getAllCustomersAddresses(customer.getId()));
+		}
+		
 		return showIndex(model, customer);
 	}
 	
+	@GetMapping("/addAddress/{id}")
+	public String showAddressForm(Model model, @ModelAttribute Address address, @PathVariable("id") int id) {
+		
+		return "addAddress";
+	}
+	
+	@PostMapping("/addAddress/{id}")
+	public String addAddressToCustomer(Model model, @ModelAttribute Address address, @PathVariable("id")int id, @ModelAttribute Customer customer){
+		
+		address.setCustomerAddressId(customer.getId());
+		addressRepository.save(address);
+		
+		return showCustomerInformation(model, id, customer, address);
+	}
+	
+	// deletes a specific address from a customer when address is present
+	@GetMapping("/deleteAddress/{addressId}/{id}")
+	public String deleteAddress(Model model,@PathVariable("addressId") int addressId,@PathVariable("id") int id, Customer customer, Address address) {
+		
+		if(addressRepository.findById(addressId).isPresent()) {
+		addressRepository.deleteById(addressId);
+		}
+		
+		
+		return showCustomerInformation(model, id, customer, address);
+	}
+	
+	// shows a form to edit a customers address
+	@GetMapping("/editAddress/{addressId}/{id}")
+	public String editAddress(@ModelAttribute Address address, Model model, @PathVariable("addressId") int addressId) {
+		
+		if(addressRepository.findById(address.getAddressId()).isPresent()) {
+			model.addAttribute("address", addressRepository.findById(address.getAddressId()).get());
+		}
+		
+		return "editAddress";
+	}
+	
+	// edits a specific address from a customer
+	@PostMapping("/editAddress/{addressId}/{id}")
+	public String updateCustomer(Model model, @PathVariable("id") int id, Customer customer, @ModelAttribute Address address) {
+		
+		address.setCustomerAddressId(customer.getId());
+		addressRepository.save(address);
+		return showCustomerInformation(model, id, customer, address);
+	}
+		
 	// shows error page
 	@GetMapping("/error")
 	public String showErrorPage() {

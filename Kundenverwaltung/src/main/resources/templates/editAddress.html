@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="Mischa Gluzman">
+   		<link rel="stylesheet" th:href="@{/style.css}">
+
+        <title>Kundenverwaltung</title>
+    </head>
+    <body>
+    <a th:href="@{/}">Zurück zur Kundenverwaltung</a>
+    	  <h2>Addresse bearbeiten</h2>
+    	
+        <div class="content">
+          
+            <form th:object="${address}"method="post">
+  				 <label for="street">Straße:</label><br>
+  				 <input type="text" th:value="${address.street}" th:field="*{street}"><br><br>
+  				 <label for="houseNumber">Hausnummer</label><br>
+  				 <input type="text" th:value="${address.houseNumber}" th:field="*{houseNumber}"><br><br>
+  				 <label for="postalCode">Postleitzahl</label><br>
+  				 <input type="text" th:value="${address.postalCode}" th:field="*{postalCode}"><br><br>
+  				 <label for="city">Stadt</label><br>
+  				 <input type="text" th:value="${address.city}" th:field="*{city}"><br><br>
+  				 <label for="country">Land</label><br>
+  				 <input type="text" th:value="${address.country}" th:field="*{country}"><br><br>
+ 				 <input type="submit" value="Submit" id="button">
+		    </form> 
+        </div>
+    </body>
+</html>

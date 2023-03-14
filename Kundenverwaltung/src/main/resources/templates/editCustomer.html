@@ -13,7 +13,7 @@
     	
         <div class="content">
           
-            <form th:object="${customer}" method="post">
+            <form th:object="${customer}"method="post">
   				 <label for="lastName">Familienname:</label><br>
   				 <input type="text" th:value="${customer.lastName}" th:field="*{lastName}"><br><br>
   				 <label for="firstName">Vorname</label><br>
