@@ -33,13 +33,35 @@
                 	<td th:text="${customer.email}"></td>
                 	<td><a th:href="@{/editCustomer/{id}(id=${customer.id})}" id="editBtn">Bearbeiten</a></td>
                 	<td><a th:href="@{/deleteCustomer/{id}(id=${customer.id})}" id="deleteBtn" >Löschen</a></td>
+                
             </table>
             
             <h3>Addressen</h3>
-              <td><a th:href="@{/addAddress/{id}(id=${customer.id})}" id="addressBtn" >Adresse hinzufügen</a></td>
-            <table>
+              <a th:href="@{/addAddress/{id}(id=${customer.id})}" id="addressBtn" >Adresse hinzufügen</a>
+              
+              <div id="standardAddress" th:if="${standardAddress != null}" th:object="${standardAddress}" >
+              	<p>
+	               	<span><b>Hauptadresse:</b></span>
+	               	<span th:text="${standardAddress.street}"></span>
+	               	<span th:text="${standardAddress.houseNumber}"></span>
+	               	<span>,</span>
+	               	<span th:text="${standardAddress.postalCode}"></span>
+	               	<span th:text="${standardAddress.city}"></span>
+	               	<span th:text="${standardAddress.country}"></span>
+              	</p>
+              </div>
+              
+              <div id="NoStandardAddress" th:if="${standardAddress == null}" th:unless="${addressList.isEmpty()}">
+              	<p>
+	               	<span><b>Keine Hauptadresse angegeben</b></span>
+	
+              	</p>
+              </div>
+            
+            <table th:if="${!addressList.isEmpty()}">
                 <tr>
-	                <th>Addressnummer</th>
+                	<th>Hauptadresse</th>
+	                <th>Adressnummer</th>
 	                <th>Straße</th>
 	                <th>Hausnummer</th>
 	                <th>Postleitzahl</th>
@@ -48,6 +70,8 @@
                 </tr>
                 
                  	<tr th:each="address: ${addressList}">
+                 	<td th:if=${!address.isStandardAddress()}><a th:href="@{/setStandardAddress/{addressId}/{id}(addressId=${address.addressId}, id=${customer.id})}" id="StandardAddressButton">✓</a></td>
+                 	<td th:if=${address.isStandardAddress()}><b>✓<b></td>
                 	<td th:text="${addressStat.index+1}"></td>
                	 	<td th:text="${address.street}"></td>
                		<td th:text="${address.houseNumber}" ></td>

@@ -28,8 +28,6 @@ public class AddressService implements AddressRepository {
 		
 		return addressList;
 	}
-	
-	
 
 	@Override
 	public List<Address> findAll() {

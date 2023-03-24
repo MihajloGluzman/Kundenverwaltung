@@ -1,11 +1,11 @@
 package de.mischagluzman.kundenverwaltung.controller;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -83,14 +83,24 @@ public class CustomerController {
 	// shows additional customers information (email, sex, addresses)
 	@GetMapping("/customerInformation/{id}")
 	public String showCustomerInformation(Model model, @PathVariable("id") int id, @ModelAttribute Customer customer, @ModelAttribute Address address) {
-	
-		if(customerRepository.findById(customer.getId()).isPresent()) {
-			model.addAttribute("customer", customerRepository.findById(customer.getId()).get());
+		
+		Customer customerById = customerRepository.findById(customer.getId()).orElse(null);
+		
+		if(customerById != null) {
+			model.addAttribute("customer", customerById);
 		}
 		
 		List<Address> addressList = addressService.getAllCustomersAddresses(id);
 		model.addAttribute("addressList", addressList);
-	
+		
+		// displays the current standard address
+		Address customersStandardAddress = addressList.stream()
+				.filter(customersAddresses -> customersAddresses.isStandardAddress()).findFirst().orElse(null);
+		
+		if(null != customersStandardAddress) {
+			model.addAttribute("standardAddress", customersStandardAddress);
+		}
+		
 		return "customerInformation";
 	}
 	
@@ -98,8 +108,10 @@ public class CustomerController {
 	@GetMapping("/editCustomer/{id}")
 	public String showEditCustomerForm(@ModelAttribute Customer customer, Model model, @PathVariable("id") int id){
 		
-		if(customerRepository.findById(customer.getId()).isPresent()) {
-			model.addAttribute("customer", customerRepository.findById(customer.getId()).get());
+		Customer customerById = customerRepository.findById(customer.getId()).orElse(null);
+		
+		if(customerById != null) {
+			model.addAttribute("customer", customerById);
 		}
 		
 		return "editCustomer";
@@ -124,12 +136,14 @@ public class CustomerController {
 	@GetMapping("/deleteCustomer/{id}")
 	public String deleteCustomer(Model model,@ModelAttribute Customer customer) {
 		
-		customerRepository.delete(customer);
+		// deletes first all addresses because exception could be thrown
+		List<Address> allCustomersAddresses = addressService.getAllCustomersAddresses(customer.getId());
 		
-		if(!addressService.getAllCustomersAddresses(customer.getId()).isEmpty()) {
-			addressRepository.deleteAll(addressService.getAllCustomersAddresses(customer.getId()));
+		if(!allCustomersAddresses.isEmpty()) {
+			addressRepository.deleteAll(allCustomersAddresses);
 		}
 		
+		customerRepository.delete(customer);
 		return showIndex(model, customer);
 	}
 	
@@ -156,7 +170,6 @@ public class CustomerController {
 		addressRepository.deleteById(addressId);
 		}
 		
-		
 		return showCustomerInformation(model, id, customer, address);
 	}
 	
@@ -164,8 +177,10 @@ public class CustomerController {
 	@GetMapping("/editAddress/{addressId}/{id}")
 	public String editAddress(@ModelAttribute Address address, Model model, @PathVariable("addressId") int addressId) {
 		
-		if(addressRepository.findById(address.getAddressId()).isPresent()) {
-			model.addAttribute("address", addressRepository.findById(address.getAddressId()).get());
+		Address addressById = addressRepository.findById(address.getAddressId()).orElse(null);
+		
+		if(addressById != null) {
+			model.addAttribute("address", addressById);
 		}
 		
 		return "editAddress";
@@ -178,6 +193,39 @@ public class CustomerController {
 		address.setCustomerAddressId(customer.getId());
 		addressRepository.save(address);
 		return showCustomerInformation(model, id, customer, address);
+	}
+	
+	// sets a specific address to the standard address and changes the previous standard address to a regular address
+	@GetMapping("/setStandardAddress/{addressId}/{id}")
+	public String setAddressToStandardAddress(Model model, @PathVariable("id") int id, @PathVariable("addressId") int addressId, Customer customer, @ModelAttribute Address address ) throws Exception {
+		
+		Address addressById = addressRepository.findById(address.getAddressId()).orElse(null);
+		 
+		if(addressById != null) {
+			handleOldStandardAddress(id);
+			addressById.setStandardAddress(true);
+			addressRepository.save(addressById);
+			return showCustomerInformation(model, id, customer, address);
+		}
+		throw new Exception("Es wurde keine Adresse gefunden");
+	}
+
+	private void handleOldStandardAddress(int id) {
+		
+		//Example definieren mit Id und isStandard=true
+		Address searchAddressWithIdAndStandard = new Address();
+		searchAddressWithIdAndStandard.setCustomerAddressId(id);
+		searchAddressWithIdAndStandard.setStandardAddress(true);
+		Example<Address> addressExample = Example.of(searchAddressWithIdAndStandard);
+		//Lesen aus der Db mit Example
+		Address oldStandardAddress = addressRepository.findOne(addressExample).orElse(null);
+		
+		//Wert auf false setzen
+		if(oldStandardAddress != null) {
+			oldStandardAddress.setStandardAddress(false);
+			//in DB speichern
+			addressRepository.save(oldStandardAddress);
+		}
 	}
 		
 	// shows error page
