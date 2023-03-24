@@ -30,3 +30,25 @@ Bei ungültigen Benutzereingaben wird /error mit den jeweiligen Fehlermeldungen 
 - Squirrel als SQL Client
 - Postgresql als Datenbank
 - Postman zum Testen der APIs
+
+Releasenotes
+
+Version 1.1 
+
+- Adressen zum Kunden hinzufügen, löschen und bearbeiten
+
+
+Version 1.2
+
+Funktionen:
+- Hauptadressen verwalten
+
+
+Bug fixes/ Anpassungen:
+
+- Kundendatendaten bearbeiten: Selectmenü zum auswählen des Geschlechts hinzugefügt, vorher textfeld
+- Kundenübersicht: Leerer Tabellenkopf wird nicht mehr angezeigt, falls Kunde keine Adresse hat
+- Controller: - Anzahl der Datenbankzugriffe verringert
+		  - Beim Löschen von einem Kunden werden jetzt zuerst die Adressen gelöscht und dann der Kunde.
+		    Vorher wurde zuerst der Kunde gelöscht und dann die Adressen.
+
